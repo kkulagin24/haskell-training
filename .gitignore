@@ -1,6 +1,8 @@
 dist
 dist-*
 cabal-dev
+tmp
+*.exe
 *.o
 *.hi
 *.chi
