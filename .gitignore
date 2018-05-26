@@ -2,6 +2,7 @@ dist
 dist-*
 cabal-dev
 tmp
+Real
 *.exe
 *.o
 *.hi
