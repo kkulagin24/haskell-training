@@ -116,3 +116,27 @@ palindromeChainLength x = toInteger $ searchPalindrome (fromIntegral x) 0
                 | otherwise = searchPalindrome (x + (reverseNumber x)) (n + 1)
           reverseNumber n = read.reverse.show $ n::Int
           isPalindrome x = x == (reverseNumber x)
+
+multiply :: String -> String -> String
+multiply xs ys = show $ (read xs :: Integer) * (read ys :: Integer)
+
+--mmm = minimum.(fmap digitToInt).show $ 261235
+
+smallest :: Integer -> (Integer, Int, Int)
+smallest n = xxx.mmm.intToList $ n
+    where intToList = (fmap digitToInt).show
+          listToInt list = read (fmap intToDigit list) :: Integer
+          mmm (x:xs)
+            | (minimum xs) == (head xs) = (((minimum xs):x:(delete (minimum xs) xs)), Just 0, 1)
+            | (minimum xs) < x = (((minimum xs):x:(reverse(delete (minimum xs) (reverse xs)))), (Just (maximum (elemIndices (minimum xs) (x:xs)))), 0)
+            | otherwise = ((x:(minimum xs):(delete (minimum xs) xs)), (elemIndex (minimum xs) (x:xs)), 1)
+          xxx (list, Just minIndex, replaceIndex) = ((listToInt list), minIndex, replaceIndex)
+
+
+--toPz :: String -> [String]
+evaluate = foldl calc [] . words
+    where calc (x:y:ys) "*" = (x * y):ys
+          calc (x:y:ys) "+" = (x + y):ys
+          calc (x:y:ys) "-" = (y - x):ys
+          calc (x:y:ys) "/" = (y / x):ys
+          calc ("*":xs) numStr = (read numStr) * head xs

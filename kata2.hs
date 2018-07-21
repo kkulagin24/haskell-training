@@ -130,27 +130,34 @@ fromDec number alphabet
 --                              correct[75,64,82,87,82,75,73,28,83,32,91,78,58,73,93]--                                                                       
 --                                     [75,64,82,87,82,75,73,28,83,32,91,78,58,73,93]
 
-longestSlideDown :: [[Int]] -> Int
-longestSlideDown pyramid = sum $ findPath pyramid []
-    where findPath [] path = path
-          findPath ([a]:pyramid) path = findPath pyramid (a:path)
-          findPath fp@(level:pyramid) path
-                | (maxPath (init <$> fp) 0) > (maxPath (tail <$> fp) 0) = findPath (init <$> pyramid) ((level !! 0):path)
-                | otherwise = findPath (tail <$> pyramid) ((level !! 1):path)
-          maxPath [] path = path
-          maxPath ([a]:pyramid) path =  maxPath pyramid (a + path)
-          maxPath ([a,b]:pyramid) path
-                | a > b = maxPath (init <$> pyramid) (a + path)
-                | a == b = max (maxPath (init <$> pyramid) (a + path)) (maxPath (tail <$> pyramid) (b + path))
-                | otherwise = maxPath (tail <$> pyramid) (b + path)
+--longestSlideDown :: [[Int]] -> Int
+--longestSlideDown pyramid = sum $ findPath pyramid []
+--    where findPath [] path = path
+--          findPath ([a]:pyramid) path = findPath pyramid (a:path)
+--          findPath fp@(level:pyramid) path
+--                | (maxPath (init <$> fp) 0) > (maxPath (tail <$> fp) 0) = findPath (init <$> pyramid) ((level !! 0):path)
+--                | otherwise = findPath (tail <$> pyramid) ((level !! 1):path)
+--          maxPath [] path = path
+--          maxPath ([a]:pyramid) path =  maxPath pyramid (a + path)
+--          maxPath ([a,b]:pyramid) path
+--                | a > b = maxPath (init <$> pyramid) (a + path)
+--                | a == b = max (maxPath (init <$> pyramid) (a + path)) (maxPath (tail <$> pyramid) (b + path))
+--                | otherwise = maxPath (tail <$> pyramid) (b + path)
 
 
---longestSlideDown pyramid = maxSum pyramid 0
---    where maxSum [] sum = sum
---          maxSum ([a]:pyramid) sum =  maxSum pyramid (a + sum)
---          maxSum pyramid sum = max (maxSum (init <$> pyramid) sum) (maxSum (tail <$> pyramid) sum)
+longestSlideDown pyramid = maxSum pyramid 0
+    where maxSum [] sum = sum
+          maxSum ([a]:pyramid) sum =  maxSum pyramid (a + sum)
+          maxSum pyramid sum = max (maxSum (init <$> pyramid) sum) (maxSum (tail <$> pyramid) sum)
 
 
 longestSlideDown' [] = 0
 longestSlideDown' ([a]:pyramid) =  a + longestSlideDown' pyramid
 longestSlideDown' pyramid = max (longestSlideDown' (init <$> pyramid)) (longestSlideDown' (tail <$> pyramid))
+
+longestSlideDown33 pyramid = maximum $ foldl sl (head pyramid) (tail pyramid)
+    where sl [a] level = zipWith (+) ([a,a]) level
+          sl (a:m:acc) (b:level) = (a + b) : (maximum [(x + y) | x <- [a,m], y <- (head level)]) : sl (m:acc) level
+
+example [a] level = zipWith (+) (a:[a]) level
+example (a:b:acc) (c:level) = (max (a + c) (b + c)):(example (b:acc) level)
